@@ -85,14 +85,14 @@ defmodule Wit do
   defp run_action(access_token, session_id, module, context, %Converse{type: "msg"} = resp, max_steps) do
     Logger.debug "Got converse type \"msg\""
 
-    apply(module, :call_action, ["say", session_id, context, resp])
+    context = apply(module, :call_action, ["say", session_id, context, resp])
     run_actions(access_token, session_id, module, "", context, max_steps)
   end
 
-  defp run_action(access_token, session_id, module, context, %Converse{type: "merge"} = resp, max_steps) do
-    Logger.debug "Got converse type \"merge\""
-    context = apply(module, :call_action, ["merge", session_id, context, resp])
-    run_actions(access_token, session_id, module, "", context, max_steps)
+  defp run_action(access_token, session_id, module, context, %Converse{type: "error"} = error, max_steps) do
+    Logger.debug "Got converse type \"error\""
+
+    apply(module, :call_action, ["error", session_id, context, error])
   end
 
   defp run_action(access_token, session_id, module, context, %Converse{type: "action"} = resp, max_steps) do

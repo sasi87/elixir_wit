@@ -9,12 +9,6 @@ defmodule Wit.DefaultActions do
   """
   @callback say(String.t, map, String.t) :: any
 
-  @doc """
-  Called when the converse API has type `{type: "merge"}`.
-  This should update the context with the information provided in the request
-  """
-  @callback merge(String.t, map, map) :: map
-
 
   @callback error(String.t, map, any) :: map
 end

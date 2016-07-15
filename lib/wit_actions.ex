@@ -14,10 +14,6 @@ defmodule Wit.Actions do
           # Send the message to the user
         end
 
-        def merge(session, context, message) do
-          context # Return the updated context
-        end
-
         def error(session, context, error) do
           # Handle error
         end
@@ -35,7 +31,7 @@ defmodule Wit.Actions do
 
       @behaviour Wit.DefaultActions
 
-      @wit_actions %{"say" => :say, "merge" => :merge, "error" => :error}
+      @wit_actions %{"say" => :say, "error" => :error, "stop" => :stop}
 
       @before_compile Wit.Actions
     end
@@ -55,8 +51,8 @@ defmodule Wit.Actions do
     {func_name, arg_list} = Macro.decompose_call(head)
 
     # Throw error if the argument list is not equal to 3
-    if length(arg_list) != 2 do
-      raise ArgumentError, message: "Wit action should have three arguments i.e. session, context"
+    if length(arg_list) != 3 do
+      raise ArgumentError, message: "Wit action should have three arguments i.e. session, context, message"
     end
 
     quote do
@@ -74,7 +70,8 @@ defmodule Wit.Actions do
       def actions() do
         @wit_actions
       end
-      def call_action(action, session, context, message) when action in ["say", "merge"] do
+
+      def call_action(action, session, context, message) when action in ["say"] do
         call_action(action, [session, context, message])
       end
 
